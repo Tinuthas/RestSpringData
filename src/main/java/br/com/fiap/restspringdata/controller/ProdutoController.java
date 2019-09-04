@@ -14,23 +14,22 @@ import java.util.List;
 public class ProdutoController {
 
     @Autowired
-    private ProdutoRepository repository;
-
+    private ProdutoRepository produtoRepository;
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public Produto cadastrar(@RequestBody Produto produto) {
-        return repository.save(produto);
+        return produtoRepository.save(produto);
     }
 
     @GetMapping()
     public List<Produto> listar() {
-        return repository.findAll();
+        return produtoRepository.findAll();
     }
 
     @GetMapping("{codigo}")
     public Produto buscar(@PathVariable int codigo){
-        return repository.findById(codigo).get();
+        return produtoRepository.findById(codigo).get();
     }
 
 

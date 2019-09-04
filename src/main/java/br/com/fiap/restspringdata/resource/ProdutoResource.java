@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.StringReader;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -14,7 +17,6 @@ public class ProdutoResource {
 
     @Autowired
     private ProdutoRepository repository;
-
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
@@ -30,6 +32,44 @@ public class ProdutoResource {
     @GetMapping("{codigo}")
     public Produto buscar(@PathVariable int codigo){
         return repository.findById(codigo).get();
+    }
+
+    @GetMapping("nome/{nome}")
+    public List<Produto> buscarPorNome(@PathVariable String nome){return repository.findByNome(nome);}
+
+    @GetMapping("pesquisa")
+    public List<Produto> buscarPorNome(@PathVariable String nome, @PathVariable boolean novo){
+        return nome!=null?
+                repository.findByNomeAndNovo(nome, novo):
+                repository.findByNovo(novo);
+    }
+
+    @GetMapping("novo/{novo}")
+    public List<Produto> buscarNovo(@PathVariable boolean novo){return repository.findByNovoOrderByNomeDesc(novo);}
+
+    @GetMapping("nomepreco/{nomePreco}")
+    public List<Produto> buscarNomePorPreco(@PathVariable String nomePreco){
+        return repository.findByNomeIgnoreCaseOrderByPrecoAsc(nomePreco);}
+
+    @GetMapping("nome/{nome}/novo{novo}")
+    public List<Produto> buscarPorNomeAndNovo(@PathVariable String nome, @PathVariable boolean novo){
+        return repository.findByNomeAndNovo(nome, novo);
+    }
+
+    @GetMapping("preco/{preco}")
+    public List<Produto> buscarPorPreco(@PathVariable String preco){
+        try{
+            return repository.findByPrecoGreaterThan(Double.parseDouble(preco));
+        }catch (Exception e) {
+            return new ArrayList<>();
+        }
+
+    }
+
+    @GetMapping("dataInicio/{dataInicio}/dataFim{dataFim }")
+    public List<Produto> buscarPorDataFabricacao(@PathVariable String dataInicio, @PathVariable String dataFim){
+        //return repository.findByDataFabricacaoBetween();
+        return new ArrayList<>();
     }
 
     @PutMapping("{id}")
