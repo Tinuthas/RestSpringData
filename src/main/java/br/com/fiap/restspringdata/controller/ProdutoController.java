@@ -17,7 +17,7 @@ public class ProdutoController {
     private ProdutoRepository produtoRepository;
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping
+    @PostMapping("/cadastrar")
     public Produto cadastrar(@RequestBody Produto produto) {
         return produtoRepository.save(produto);
     }
@@ -27,9 +27,20 @@ public class ProdutoController {
         return produtoRepository.findAll();
     }
 
-    @GetMapping("{codigo}")
+    @GetMapping("/{codigo}")
     public Produto buscar(@PathVariable int codigo){
         return produtoRepository.findById(codigo).get();
+    }
+
+    @GetMapping("/cadastrar")
+    public String abrirFormulario(Produto produto){
+        return "produto/form";
+    }
+
+    @GetMapping("/listar")
+    public String listarProdutos(Model model){
+        model.addAttribute("produtos", produtoRepository.findAll());
+        return "produto/lista";
     }
 
 
