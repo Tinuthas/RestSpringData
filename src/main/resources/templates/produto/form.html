@@ -11,7 +11,7 @@
 </head>
 <body>
 
-<form th:action="@{/produto/cadastrar}" th:prod="${produtos}" method="post">
+<form th:action="@{/produto/cadastrar}"  th:object="${prod}" method="post">
     <div class="form-group">
         <label for="nome">Nome</label>
         <input th:field="*{nome}" id="nome" class="form-control">

@@ -1,5 +1,7 @@
 package br.com.fiap.restspringdata.entity;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 

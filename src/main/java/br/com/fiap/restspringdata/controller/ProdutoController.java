@@ -7,19 +7,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
 @Controller
+@RequestMapping("/produto")
 public class ProdutoController {
 
     @Autowired
     private ProdutoRepository produtoRepository;
 
-    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/cadastrar")
-    public Produto cadastrar(@RequestBody Produto produto) {
-        return produtoRepository.save(produto);
+    public String cadastrar(Produto produto, Model model,  RedirectAttributes redirectAttributes) {
+        produtoRepository.save(produto);
+        redirectAttributes.addFlashAttribute("msg","Cadastrado!");
+        return "redirect:/produto/listar";
     }
 
     @GetMapping()
@@ -33,13 +36,27 @@ public class ProdutoController {
     }
 
     @GetMapping("/cadastrar")
-    public String abrirFormulario(Produto produto){
+    public String abrirFormulario(Produto produto, Model model){
+        model.addAttribute("prod", produto);
         return "produto/form";
+    }
+
+    @GetMapping("/editar/{id}")
+    public String editar(@PathVariable("id") int codigo, Model model){
+        model.addAttribute("prod", produtoRepository.findById(codigo));
+        return "produto/form";
+    }
+
+    @PostMapping("/excluir")
+    public String excluir( int codigo, RedirectAttributes redirectAttributes){
+        produtoRepository.deleteById(codigo);
+        redirectAttributes.addFlashAttribute("msg","Produto Excluido!");
+        return "redirect:/produto/listar";
     }
 
     @GetMapping("/listar")
     public String listarProdutos(Model model){
-        model.addAttribute("produtos", produtoRepository.findAll());
+        model.addAttribute("prods", produtoRepository.findAll());
         return "produto/lista";
     }
 
